@@ -33,20 +33,62 @@ Esta distribuição é uma proposta inicial e pode ser ajustada pelo grupo. Todo
 - Validar entradas no servidor, retornar erros claros e usar consultas parametrizadas.
 - Manter a string de conexão em `DATABASE_URL`; nunca versionar `.env` ou credenciais.
 
-## Modelo de dados inicial
+## Modelo de dados relacional
 
 - `servicos`: identificador, nome e duração em minutos.
 - `profissionais`: identificador e nome fictício.
 - `agendamentos`: identificador, cliente fictício, referências ao serviço e profissional, início, fim e status.
 
-As chaves estrangeiras e restrições do banco serão definidas no `banco/schema.sql`. O serviço deve ter duração entre 15 e 240 minutos. O status do agendamento deve distinguir pelo menos ativo e cancelado.
+O modelo relacional foi estruturado para evitar dados órfãos, garantir integridade referencial e possibilitar o histórico de agendamentos.
+
+```mermaid
+erDiagram
+    SERVICOS {
+        BIGINT id PK "IDENTITY"
+        VARCHAR nome "NOT NULL"
+        INT duracao_minutos "CHECK 15 a 240"
+    }
+
+    PROFISSIONAIS {
+        BIGINT id PK "IDENTITY"
+        VARCHAR nome "NOT NULL"
+    }
+
+    AGENDAMENTOS {
+        BIGINT id PK "IDENTITY"
+        VARCHAR cliente "NOT NULL"
+        BIGINT servico_id FK "NOT NULL, RESTRICT"
+        BIGINT profissional_id FK "NOT NULL, RESTRICT"
+        TIMESTAMP data_hora_inicio "NOT NULL"
+        TIMESTAMP data_hora_fim "CHECK fim > inicio"
+        VARCHAR status "CHECK ('ATIVO', 'CANCELADO')"
+    }
+
+    SERVICOS ||--o{ AGENDAMENTOS : "é realizado em"
+    PROFISSIONAIS ||--o{ AGENDAMENTOS : "atende"
+```
+
+### Restrições e Integridade
+- **Chaves Primárias e Estrangeiras**: Chaves primárias com auto-incremento padrão ANSI e chaves estrangeiras com `ON DELETE RESTRICT`, impedindo a remoção de serviços ou profissionais que possuam agendamentos vinculados (evita registros órfãos).
+- **Validação de Duração**: `CHECK (duracao_minutos >= 15 AND duracao_minutos <= 240)`.
+- **Validação de Intervalo Temporal**: `CHECK (data_hora_fim > data_hora_inicio)`.
+- **Restrição de Estados**: `CHECK (status IN ('ATIVO', 'CANCELADO'))` com valor padrão `'ATIVO'`.
+
+### Decisão: Onde é validada a sobreposição de horários?
+- **Decisão**: A validação de sobreposição de horários é realizada na **Camada de Aplicação (`Service`)**, com controle transacional (`@Transactional`) e suporte a índices no banco de dados (detalhado em [ADR-006](docs/adr/backend/ADR-006-estrategia-banco-h2-e-validacao-sobreposicao.md)).
+- **Tratamento de Concorrência**: Agendamentos simultâneos são isolados pela transação do Spring Boot, retornando `HTTP 409 Conflict` com payload padronizado caso uma sobreposição seja detectada.
+- **Portabilidade**: Essa estratégia foi escolhida porque constraints de intervalo como `EXCLUDE USING gist` só existem no PostgreSQL, garantindo que a aplicação execute de forma idêntica no **H2 local**, no **Azure SQL** ou no **PostgreSQL**.
+
+### Histórico de Cancelamentos
+- Ao cancelar um atendimento, o registro é atualizado para `status = 'CANCELADO'`.
+- A verificação de sobreposição filtra estritamente `WHERE status = 'ATIVO'`. Dessa forma, o horário cancelado é liberado imediatamente para nova marcação, mantendo o histórico de agendamentos preservado no banco para auditoria.
 
 ## Arquitetura e tecnologias
 
 Fluxo previsto: cliente ou ferramenta HTTP → aplicação/API → banco relacional.
 
-- Linguagem e framework: a definir pelo grupo.
-- Banco de dados: a definir conforme a atividade e o nível de implantação atribuído.
+- Linguagem e framework: Java com Spring Boot.
+- Banco de dados: H2 Database (scripts ANSI em `banco/schema.sql` e `banco/dados-iniciais.sql`, compatíveis com PostgreSQL e Azure SQL).
 - Hospedagem: Azure App Service, conforme a atividade.
 - Nível de implantação (A, B ou C): a confirmar com a distribuição do professor.
 
