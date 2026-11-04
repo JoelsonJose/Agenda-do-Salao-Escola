@@ -6,6 +6,13 @@ Bem-vindo à documentação técnica e arquitetural do projeto **Agenda do Salã
 
 ## 📚 Conteúdo da Documentação
 
+- **[Requisitos e Escopo (Desafio 03)](requisitos/README.md)**:
+  - Usuária e Persona: **Recepcionista do Salão-Escola**
+  - [Requisitos Funcionais (RF-01 a RF-07)](requisitos/requisitos-funcionais.md)
+  - [Requisitos Não Funcionais (RNF-01 a RNF-08)](requisitos/requisitos-nao-funcionais.md)
+  - [Critérios de Aceitação (CA1 a CA5) e Modelos Visuais (ERD, Casos de Uso, Sequência)](requisitos/modelos-e-criterios.md)
+  - Status do Nível de Implantação Azure (A, B ou C): *Pendente de confirmação do professor*
+
 - **[Decisões de Arquitetura (ADRs)](adr/README.md)**: Registros formais de decisões arquiteturais para o Frontend e Backend.
   - **[Frontend ADRs](adr/frontend/)**:
     - [ADR-001: React + React DOM + Vite](adr/frontend/ADR-001-stack-react-vite.md)
