@@ -1,3 +1,4 @@
 # Normaliza quebras de linha para LF em todos os ambientes
 * text=auto eol=lf
 *.md text eol=lf
+
