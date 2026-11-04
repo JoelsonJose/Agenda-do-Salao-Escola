@@ -95,3 +95,4 @@ CREATE INDEX IF NOT EXISTS idx_agendamento_data
 --    - Cláusulas `CREATE TABLE IF NOT EXISTS` podem ser substituídas por:
 --      `IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'servicos') CREATE TABLE servicos (...)`.
 -- =====================================================================
+

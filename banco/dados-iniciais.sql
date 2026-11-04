@@ -64,3 +64,4 @@ SELECT 'Coloração', 120
 WHERE NOT EXISTS (
     SELECT 1 FROM servicos WHERE nome = 'Coloração'
 );
+

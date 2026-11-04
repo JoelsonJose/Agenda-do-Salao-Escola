@@ -87,8 +87,8 @@ erDiagram
 
 Fluxo previsto: cliente ou ferramenta HTTP → aplicação/API → banco relacional.
 
-- Linguagem e framework: Java com Spring Boot.
-- Banco de dados: H2 Database (scripts ANSI em `banco/schema.sql` e `banco/dados-iniciais.sql`, compatíveis com PostgreSQL e Azure SQL).
+- Linguagem e framework: Java com Spring Boot e Spring Data JPA (Hibernate como ORM).
+- Banco de dados: H2 Database persistente com console visual web (`/h2-console`) e scripts ANSI em `banco/schema.sql` e `banco/dados-iniciais.sql` (compatíveis com PostgreSQL e Azure SQL).
 - Hospedagem: Azure App Service, conforme a atividade.
 - Nível de implantação (A, B ou C): a confirmar com a distribuição do professor.
 
