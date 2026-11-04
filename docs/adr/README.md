@@ -26,7 +26,8 @@ docs/
         ├── ADR-001-stack-spring-boot.md
         ├── ADR-002-arquitetura-em-camadas.md
         ├── ADR-003-spring-security-security-by-design.md
-        └── ADR-004-clean-code-backend.md
+        ├── ADR-004-clean-code-backend.md
+        └── ADR-005-documentacao-openapi-swagger.md
 ```
 
 ---
@@ -52,4 +53,5 @@ docs/
 | [ADR-002](backend/ADR-002-arquitetura-em-camadas.md) | Arquitetura em Camadas (Layered Architecture) | Aceito | 04/11/2026 |
 | [ADR-003](backend/ADR-003-spring-security-security-by-design.md) | Segurança com Spring Security e Security by Design | Aceito | 04/11/2026 |
 | [ADR-004](backend/ADR-004-clean-code-backend.md) | Diretrizes e Padrões de Clean Code no Backend | Aceito | 04/11/2026 |
+| [ADR-005](backend/ADR-005-documentacao-openapi-swagger.md) | Documentação de Contratos de API com OpenAPI 3 e Swagger UI | Aceito | 04/11/2026 |
 

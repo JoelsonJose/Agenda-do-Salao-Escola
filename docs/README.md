@@ -19,6 +19,7 @@ Bem-vindo à documentação técnica e arquitetural do projeto **Agenda do Salã
     - [ADR-002: Arquitetura em Camadas (Layered Architecture)](adr/backend/ADR-002-arquitetura-em-camadas.md)
     - [ADR-003: Spring Security e Security by Design](adr/backend/ADR-003-spring-security-security-by-design.md)
     - [ADR-004: Diretrizes de Clean Code no Backend](adr/backend/ADR-004-clean-code-backend.md)
+    - [ADR-005: Documentação de Contratos com OpenAPI 3 e Swagger UI](adr/backend/ADR-005-documentacao-openapi-swagger.md)
 
 ---
 
