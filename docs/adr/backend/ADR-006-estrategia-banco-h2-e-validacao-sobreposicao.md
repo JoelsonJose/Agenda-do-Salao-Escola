@@ -72,3 +72,4 @@ flowchart TD
 ### Negativas / Mitigações
 - **Banco em memória perde dados ao reiniciar a JVM**:
   - **Mitigação**: Configurar a string `DATABASE_URL` no `application.properties` para modo arquivo persistente (`jdbc:h2:file:./dados/agenda;DB_CLOSE_DELAY=-1`) ou banco relacional gerenciado na Azure.
+
