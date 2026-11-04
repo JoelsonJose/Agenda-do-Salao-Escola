@@ -57,3 +57,4 @@ Configurar a persistência do H2 em arquivo (`jdbc:h2:file:./dados/agenda;DB_CLO
 ### Negativas / Mitigações
 - **Overhead do ORM**: Hibernate adiciona camadas de abstração e cache de primeiro nível.
 - **Mitigação**: O volume da Agenda do Salão-Escola é perfeitamente adequado para JPA, e as consultas complexas utilizam JPQL/queries parametrizadas objetivas.
+
