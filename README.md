@@ -45,7 +45,7 @@ As chaves estrangeiras e restrições do banco serão definidas no `banco/schema
 
 Fluxo previsto: cliente ou ferramenta HTTP → aplicação/API → banco relacional.
 
-- Linguagem e framework: a definir pelo grupo.
+- Linguagem e framework: React + Vite (Frontend) e Spring Boot (Backend) — veja [docs/adr/](docs/adr/README.md).
 - Banco de dados: a definir conforme a atividade e o nível de implantação atribuído.
 - Hospedagem: Azure App Service, conforme a atividade.
 - Nível de implantação (A, B ou C): a confirmar com a distribuição do professor.
@@ -90,6 +90,10 @@ banco/
   schema.sql
   dados-iniciais.sql
 docs/
+  README.md
+  adr/
+    frontend/
+    backend/
   planejamento.md
   testes.md
 evidencias/
