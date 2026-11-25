@@ -12,12 +12,12 @@ Este roteiro registra os passos pedidos para o Desafio 03: aplicação no Azure 
 | Servidor SQL | `agenda-salao-jj-20261125-southafrica.database.windows.net` (South Africa North) |
 | Banco SQL | `free-sql-db-6668541` |
 
-Estado conferido em 25/11/2026: o App Service está com o JAR desta aplicação publicado e inicia com `java -jar /home/site/wwwroot/app.jar`. A URL raiz respondeu HTTP 200; `/api/health` respondeu `UP`, `banco=conectado` e incluiu `iniciado_em`. A autenticação SQL está habilitada, e os nomes de configuração `DATABASE_USERNAME`, `DATABASE_PASSWORD` e `APP_PASSWORD` estão no App Service (os valores permanecem fora do repositório). O banco estava `Online` após o teste, com `AutoPause`; a oferta gratuita mostrava excedentes desativados. A regra `AllowAzureServices` (0.0.0.0) foi criada. Ainda falta adicionar o IP atual na regra de firewall.
+Estado conferido em 25/11/2026: o App Service está com o JAR desta aplicação publicado e inicia com `java -jar /home/site/wwwroot/app.jar`. A URL raiz respondeu HTTP 200; `/api/health` respondeu `UP`, `banco=conectado` e incluiu `iniciado_em`. A autenticação SQL está habilitada, e os nomes de configuração `DATABASE_USERNAME`, `DATABASE_PASSWORD` e `APP_PASSWORD` estão no App Service (os valores permanecem fora do repositório). O banco estava `Online` após o teste, com `AutoPause`; a oferta gratuita mostrava excedentes desativados. As regras `AllowAzureServices` (0.0.0.0) e do IP cliente foram confirmadas. A consulta SQL direta de leitura foi realizada; seu resultado sem credenciais está em `../evidencias/consulta-sql.txt`.
 
 ## 1. Banco Azure SQL
 
 1. Confira no portal que o banco está na oferta gratuita e com cobrança de excedentes desativada.
-2. Em **Networking**, use o endpoint público conforme a atividade, habilite **Allow Azure services and resources to access this server** e adicione o IP atual para o acesso de teste solicitado. A regra `AllowAzureServices` já está criada; adicione o IP atual e salve as regras.
+2. Em **Networking**, use o endpoint público conforme a atividade, habilite **Allow Azure services and resources to access this server** e adicione o IP atual para o acesso de teste solicitado. As duas regras foram confirmadas no firewall.
 3. O perfil `azure` aplica, ao iniciar, os scripts idempotentes `banco/schema-azure-sql.sql` e `banco/dados-iniciais-azure-sql.sql`. Confirme que as tabelas `servicos`, `profissionais` e `agendamentos` existem e que os catálogos fictícios foram carregados.
 
 O perfil Azure usa autenticação SQL. Cadastre usuário e senha somente em **App Service → Configuration → Application settings**, nunca em arquivos versionados.
@@ -72,4 +72,4 @@ Para provar persistência, foi criado um registro com `GXX-PALAVRA`, confirmado 
 
 ## Estado de entrega
 
-Estado: publicação, inicialização do backend, conexão Azure SQL, catálogo, casos de aceite e persistência após restart foram confirmados. Faltam a regra de firewall com o IP atual, a consulta SQL direta como evidência e as capturas da execução com data/hora e vídeo de apresentação.
+Estado: publicação, inicialização do backend, conexão Azure SQL, catálogo, casos de aceite, persistência após restart e consulta SQL direta foram confirmados. Faltam as capturas da execução com data/hora e o vídeo de apresentação.

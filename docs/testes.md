@@ -14,7 +14,7 @@ Os casos abaixo foram executados na URL Azure em 25/11/2026, entre 16:03 e 16:10
 | Escova 45 min às 19:45 | `400`, excede o expediente | `400` — passou |
 | Reserva no domingo | `400` | `400` — passou |
 
-Foi usado o nome fictício `GXX-PALAVRA`. Após reiniciar o App Service, `iniciado_em` mudou de `16:08` para `16:10`, `/api/health` voltou `UP` com o banco conectado, e o mesmo agendamento continuou na consulta diária (3 registros retornados). A consulta SQL direta e as capturas de tela com data/hora ainda precisam ser anexadas em `evidencias/`.
+Foi usado o nome fictício `GXX-PALAVRA`. Após reiniciar o App Service, `iniciado_em` mudou de `16:08` para `16:10`, `/api/health` voltou `UP` com o banco conectado, e o mesmo agendamento continuou na consulta diária (3 registros retornados). Em 25/11/2026 às 16:31 (America/Sao_Paulo), uma consulta direta somente de leitura ao Azure SQL confirmou 4 serviços, 3 profissionais, 4 agendamentos e 2 registros com o código fictício. O comando e o resultado estão em [`../evidencias/consulta-sql.txt`](../evidencias/consulta-sql.txt). As capturas de tela com data/hora ainda precisam ser anexadas.
 
 ## Testes automatizados do backend
 

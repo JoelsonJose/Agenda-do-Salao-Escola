@@ -1,0 +1,17 @@
+Consulta direta de leitura — Azure SQL
+Desafio 03: Agenda do Salão-Escola
+Data e hora: 25/11/2026 16:31:21 (America/Sao_Paulo)
+Banco: free-sql-db-6668541
+Conexão: realizada com TLS usando as configurações protegidas do App Service.
+Credenciais e endereço IP não foram incluídos neste registro.
+
+Consulta executada:
+SELECT
+  (SELECT COUNT(*) FROM dbo.servicos) AS servicos,
+  (SELECT COUNT(*) FROM dbo.profissionais) AS profissionais,
+  (SELECT COUNT(*) FROM dbo.agendamentos) AS agendamentos,
+  (SELECT COUNT(*) FROM dbo.agendamentos WHERE cliente = N'GXX-PALAVRA') AS reservas_com_codigo_teste;
+
+Resultado observado:
+Conexao SQL: OK
+servicos=4; profissionais=3; agendamentos=4; reservas_com_codigo_teste=2
