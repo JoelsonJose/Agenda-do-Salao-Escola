@@ -2,6 +2,8 @@
 
 Aplicação do **Cloud Challenge — Desafio 03** para consultar a agenda diária de um salão-escola, criar e cancelar atendimentos e impedir dois agendamentos ativos no mesmo horário para a mesma profissional.
 
+**Aplicação publicada:** [Abrir a Agenda do Salão-Escola](https://agenda-salao-escola-jj-hwdra6czavawczht.brazilsouth-01.azurewebsites.net)
+
 ## Equipe
 
 | Integrantes | Frente | Entregas |
