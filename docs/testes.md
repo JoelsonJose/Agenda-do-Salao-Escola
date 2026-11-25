@@ -14,7 +14,13 @@ Os casos abaixo foram executados na URL Azure em 25/11/2026, entre 16:03 e 16:10
 | Escova 45 min às 19:45 | `400`, excede o expediente | `400` — passou |
 | Reserva no domingo | `400` | `400` — passou |
 
-Foi usado o nome fictício `GXX-PALAVRA`. Após reiniciar o App Service, `iniciado_em` mudou de `16:08` para `16:10`, `/api/health` voltou `UP` com o banco conectado, e o mesmo agendamento continuou na consulta diária (3 registros retornados). Em 25/11/2026 às 16:31 (America/Sao_Paulo), uma consulta direta somente de leitura ao Azure SQL confirmou 4 serviços, 3 profissionais, 4 agendamentos e 2 registros com o código fictício. O comando e o resultado estão em [`../evidencias/consulta-sql.txt`](../evidencias/consulta-sql.txt). As capturas de tela com data/hora ainda precisam ser anexadas.
+Os testes de persistência usaram o marcador literal `GXX-PALAVRA`. Após reiniciar o App Service, `iniciado_em` mudou de `16:08` para `16:10`, `/api/health` voltou `UP` com o banco conectado, e o mesmo agendamento continuou na consulta diária (3 registros retornados). Para a comprovação final, o grupo ainda precisa cadastrar também o código real com a palavra anunciada pelo professor. Em 25/11/2026 às 16:31 (America/Sao_Paulo), uma consulta direta somente de leitura ao Azure SQL confirmou 4 serviços, 3 profissionais, 4 agendamentos e 2 registros com o marcador de teste. O comando e o resultado estão em [`../evidencias/consulta-sql.txt`](../evidencias/consulta-sql.txt). As capturas de tela com data/hora ainda precisam ser anexadas.
+
+## Agenda de demonstração
+
+Em 25/11/2026, foram criados pela aplicação quatro atendimentos fictícios para 30/11/2026, um por serviço. Às 09:00, Ana atende Corte; às 10:00, Bruno atende Escova; às 11:00, Carla atende Manicure; às 13:00, Ana atende Coloração. Os quatro foram consultados na API e confirmados no Azure SQL como `ATIVO`. O banco tem oito agendamentos no total, contando quatro registros anteriores dos testes de aceite.
+
+Na mesma revisão, uma nova tentativa para Ana às 09:15, enquanto o Corte das 09:00 está ativo, foi recusada com HTTP `409`. O código verifica sobreposição de intervalos ativos para a mesma profissional; horários consecutivos são permitidos, conforme o cenário CA2.
 
 ## Testes automatizados do backend
 

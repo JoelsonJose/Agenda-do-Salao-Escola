@@ -11,4 +11,6 @@ Capturar durante a execução real do projeto e adicionar aqui. As evidências d
 7. URL pública e resultado de `/api/health` com `iniciado_em` e banco conectado.
 8. Resultado do pipeline CI no commit entregue e link do vídeo de apresentação, conforme o PDF.
 
+Para a demonstração da agenda, os quatro exemplos fictícios já estão cadastrados em **30/11/2026**: Corte com Ana às 09:00, Escova com Bruno às 10:00, Manicure com Carla às 11:00 e Coloração com Ana às 13:00 (horário de Brasília). Selecione essa data na aplicação para exibi-los.
+
 Execução observada em 25/11/2026: o site respondeu, `/api/health` indicou aplicação ativa e banco conectado, os sete cenários acima passaram, o registro fictício continuou disponível depois do reinício do App Service e uma consulta direta confirmou os registros no Azure SQL. As evidências de tela ainda precisam ser capturadas pelo grupo; não há imagens anexadas neste checkout.

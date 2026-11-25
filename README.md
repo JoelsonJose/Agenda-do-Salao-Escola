@@ -111,10 +111,21 @@ Para desenvolvimento, usamos H2 em arquivo; no nível A, Azure SQL fornece banco
 | Impedir conflito, respeitar expediente e calcular duração | Implementado e coberto por testes automatizados locais |
 | Persistência local | H2 em arquivo; teste separado cobre persistência local |
 | Persistência no Azure e reinício do App Service | Confirmada: a reserva continuou após mudança de `iniciado_em` |
-| Consulta SQL direta e capturas com data/hora | Pendentes |
+| Consulta SQL direta | Confirmada; registro da consulta em `evidencias/consulta-sql.txt` |
+| Capturas de tela da prova de persistência com data/hora | Pendentes de anexar pelo grupo |
+| Registro `GXX-PALAVRA` com a palavra anunciada | O marcador literal usado nos testes deve ser substituído pelo código real do grupo e palavra do dia |
+| Teste do código `PROF-HHMM` (nível A) | Depende do cadastro do professor durante o teste |
 | Vídeo da apresentação | Pendente de gravação pelo grupo |
 
-O roteiro de apresentação está em [`docs/pitch.md`](docs/pitch.md); o link da gravação deve ser inserido aqui depois que o grupo gravar e publicar o vídeo.
+O roteiro de apresentação está em [`docs/pitch.md`](docs/pitch.md); quando o grupo gravar e publicar o vídeo, insira o link aqui.
+
+### Dificuldade superada e limitações
+
+Na implantação, os scripts H2 não eram compatíveis com o Azure SQL e o inicializador do Spring separava comandos do SQL Server pelo ponto e vírgula. A solução foi manter scripts T-SQL próprios e configurar `@@` como separador no perfil Azure. Também foi necessário configurar o App Service para iniciar o JAR publicado em `/home/site/wwwroot/app.jar`.
+
+O catálogo é fictício e carregado por script; a atividade não pede telas para cadastrar serviços ou profissionais. O banco gratuito pode pausar automaticamente e demorar na primeira conexão. As capturas da prova de persistência e o vídeo ainda precisam ser anexados. No nível A, o professor fará o teste com o código `PROF-HHMM`.
+
+O Azure SQL está no endpoint público conforme o roteiro da atividade: a aplicação precisa acessar serviços Azure e o grupo precisa consultar o banco a partir do IP liberado para teste. As credenciais ficam nas configurações do App Service, fora do repositório.
 
 ## Testes, tarefas e evidências
 
