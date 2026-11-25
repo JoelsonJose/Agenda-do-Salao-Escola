@@ -8,7 +8,7 @@ Aplicação do **Cloud Challenge — Desafio 03** para consultar a agenda diári
 
 | Integrantes | Frente | Entregas |
 |---|---|---|
-| Joelson e Tayana | Desenvolvimento | API, interface web e integração das funcionalidades. |
+| Joelson e Tayanne | Desenvolvimento | API, interface web e integração das funcionalidades. |
 | Homero e César | Dados | Modelo relacional, scripts SQL, catálogo fictício e validação da persistência. |
 | Lucas | Nuvem | Configuração de ambiente e implantação Azure do nível A escolhido pelo grupo. |
 | Nicolas e Morgana | QA e documentação | Casos de teste, evidências, revisão do README e preparação da apresentação. |
