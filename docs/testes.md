@@ -40,6 +40,6 @@ Comando: `cd frontend; npm ci; npm test`.
 
 Execute a aplicação com H2 em arquivo e use dados fictícios. Capture também o processo de reiniciar a API e consultar o registro salvo; o teste automatizado em banco em memória não substitui essa evidência de persistência. O índice das capturas necessárias está em [`../evidencias/README.md`](../evidencias/README.md).
 
-O backend passou nos 10 testes automatizados locais; o frontend passou nos 2 testes e no build Vite. O JAR foi empacotado em uma cópia temporária porque outro processo mantinha o diretório `backend/target` em uso. O deploy e os testes Azure acima ocorreram neste branch local; ainda não há commit publicado associado a eles.
+O backend passou nos 10 testes automatizados locais; o frontend passou nos 2 testes e no build Vite. O JAR foi empacotado em uma cópia temporária porque outro processo mantinha o diretório `backend/target` em uso. O deploy e os testes Azure acima foram publicados no branch `complete-agenda`. No CI desse commit, frontend e backend passaram; o Trivy não chegou a analisar os arquivos porque o Maven Central respondeu HTTP 429 durante a resolução de dependências (limitação temporária do repositório externo).
 
 Registre também o commit e as capturas reais quando forem produzidos. Os resultados acima foram observados; as capturas não foram fabricadas.

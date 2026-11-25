@@ -120,7 +120,7 @@ O roteiro de apresentação está em [`docs/pitch.md`](docs/pitch.md); o link da
 
 Em `frontend/`, execute `npm ci`, `npm test` e `npm run build`; depois execute `mvn -f backend/pom.xml verify` na raiz para testar e empacotar o backend com o front-end. O CI faz a mesma sequência em cada push e pull request.
 
-O roteiro de QA está em [`docs/testes.md`](docs/testes.md). A lista das evidências que ainda precisam ser produzidas durante a execução está em [`evidencias/README.md`](evidencias/README.md). Não marque implantação, persistência após reinício ou apresentação como comprovadas sem capturar a demonstração correspondente.
+O roteiro de QA está em [`docs/testes.md`](docs/testes.md). O grupo ainda precisa anexar as capturas da demonstração e o vídeo listado em [`evidencias/README.md`](evidencias/README.md); os resultados já observados estão descritos sem substituir essas evidências visuais.
 
 ## Sprints propostas
 
