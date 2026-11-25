@@ -25,18 +25,17 @@ O objetivo principal é eliminar conflitos de agendamento manual no Salão-Escol
 ## 📌 3. Nível de Implantação na Azure (Status & Pendência)
 
 > [!IMPORTANT]
-> **Status da Definição de Nível**: **PENDENTE DE CONFIRMAÇÃO COM O PROFESSOR**
-> O grupo aguarda a atribuição oficial do professor referente ao nível de implantação no Azure App Service.
+> **Nível escolhido pelo grupo**: **A**. A aplicação foi publicada no App Service e conectada ao Azure SQL gerenciado. Os testes de aceite e a persistência após reinício foram verificados em 25/11/2026; capturas e consulta SQL direta ainda faltam como evidência anexada.
 
 ### Opções do Desafio:
 
 | Nível | Descrição do Escopo de Nuvem | Status Atual |
 |---|---|---|
-| **Nível A** | Deploy básico da API e Frontend no Azure App Service + Banco Relacional persistente + `DATABASE_URL`. | Em análise |
-| **Nível B** | Nível A + Automação de CI/CD via GitHub Actions + Configurações de variáveis de ambiente gerenciadas via Azure CLI/Portal. | Em análise |
-| **Nível C** | Nível B + Monitoramento com Azure Application Insights / Health Metrics + Resiliência e logs centralizados. | Em análise |
+| **Nível A** | Aplicação no Azure App Service e banco relacional criado/gerenciado pelo grupo. | Escolhido; publicação, conexão e cenários de aceite verificados |
+| **Nível B** | Aplicação no App Service com o banco compartilhado disponibilizado pelo professor, conforme o enunciado. | Não escolhido |
+| **Nível C** | Execução local da aplicação, conforme o enunciado. | Não escolhido |
 
-*A decisão final será atualizada neste documento e no `README.md` assim que o professor confirmar a distribuição.*
+*Detalhes da implantação e itens de evidência restantes em `../deploy-azure.md`.*
 
 ---
 

@@ -19,12 +19,12 @@ public class CatalogoController {
         this.profissionalRepository = profissionalRepository;
     }
 
-    @GetMapping("/servicos")
+    @GetMapping({"/servicos", "/api/servicos"})
     public List<ServicoResponse> servicos() {
         return servicoRepository.findAll().stream().map(ServicoResponse::from).toList();
     }
 
-    @GetMapping("/profissionais")
+    @GetMapping({"/profissionais", "/api/profissionais"})
     public List<ProfissionalResponse> profissionais() {
         return profissionalRepository.findAll().stream().map(ProfissionalResponse::from).toList();
     }

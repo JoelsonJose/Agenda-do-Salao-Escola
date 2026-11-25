@@ -8,6 +8,6 @@
 >
 > A interface React conversa com uma API Java e Spring Boot. Os dados ficam em um banco relacional; usamos H2 em arquivo para desenvolver e demonstrar a persistência local. Os testes cobrem criação, conflito, cancelamento, horário de funcionamento e consulta da agenda. O pipeline executa os testes e gera o build.
 >
-> A implantação Azure será demonstrada conforme o nível A, B ou C definido para o grupo pelo professor. Vamos apresentar a agenda funcionando, um conflito recusado, um cancelamento e as evidências correspondentes.
+> A implantação Azure será demonstrada no nível A escolhido pelo grupo. Vamos apresentar a agenda funcionando, um conflito recusado, um cancelamento e as evidências correspondentes, depois que a aplicação estiver publicada e testada.
 
-**Antes de gravar:** substituir a frase do nível pela configuração real do grupo, mostrar resultados que tenham sido executados, exibir a URL Azure apenas se existir e anexar a gravação verdadeira às evidências. Este roteiro não é uma gravação nem comprova a implantação.
+**Antes de gravar:** mostrar somente resultados executados, exibir a URL Azure após a publicação e anexar a gravação verdadeira às evidências. Este roteiro não é uma gravação nem comprova a implantação.

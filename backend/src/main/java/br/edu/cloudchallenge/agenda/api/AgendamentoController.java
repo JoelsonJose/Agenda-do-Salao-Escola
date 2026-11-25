@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/agendamentos")
+@RequestMapping({"/agendamentos", "/api/agendamentos"})
 public class AgendamentoController {
     private final AgendamentoService agendamentoService;
 

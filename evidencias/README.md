@@ -1,14 +1,14 @@
 # Evidências do desafio
 
-Capturar durante a execução real do projeto e adicionar aqui (removendo dados pessoais e segredos):
+Capturar durante a execução real do projeto e adicionar aqui. As evidências de tela devem exibir data e hora; remova dados pessoais e segredos. Este arquivo é checklist e não comprova execução.
 
-1. Tela da aplicação mostrando a agenda e o estado do banco.
+1. Aplicação publicada mostrando agenda e conexão do banco.
 2. Agendamento salvo e exibido na consulta da agenda.
 3. Tentativa de conflito para a mesma profissional e resposta HTTP 409.
 4. Cancelamento e novo agendamento no intervalo liberado.
-5. Reinicialização da API com o mesmo banco em arquivo e prova de que os registros permanecem.
-6. Resultado do pipeline CI no commit final.
-7. URL e execução na nuvem, somente se o nível atribuído exigir implantação.
-8. Apresentação/pitch conforme as instruções da turma.
+5. Código de grupo na reserva, reinício do App Service e confirmação de persistência no banco.
+6. Tabela de execução dos critérios de aceite CA1–CA5 e captura da agenda diária.
+7. URL pública e resultado de `/api/health` com `iniciado_em` e banco conectado.
+8. Resultado do pipeline CI no commit entregue e link do vídeo de apresentação, conforme o PDF.
 
-Neste checkout, esses registros ainda não foram capturados. Este arquivo é apenas o checklist, não uma prova de execução.
+Execução observada em 25/11/2026: o site respondeu, `/api/health` indicou aplicação ativa e banco conectado, os sete cenários acima passaram e o registro fictício continuou disponível depois do reinício do App Service. As evidências ainda precisam ser capturadas pelo grupo; a consulta SQL direta também está pendente. Não há imagens anexadas neste checkout.

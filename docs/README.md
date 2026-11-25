@@ -11,7 +11,7 @@ Bem-vindo à documentação técnica e arquitetural do projeto **Agenda do Salã
   - [Requisitos Funcionais (RF-01 a RF-07)](requisitos/requisitos-funcionais.md)
   - [Requisitos Não Funcionais (RNF-01 a RNF-08)](requisitos/requisitos-nao-funcionais.md)
   - [Critérios de Aceitação (CA1 a CA5) e Modelos Visuais (ERD, Casos de Uso, Sequência)](requisitos/modelos-e-criterios.md)
-  - Status do Nível de Implantação Azure (A, B ou C): *Pendente de confirmação do professor*
+  - Nível de implantação Azure escolhido pelo grupo: **A** (App Service + Azure SQL); publicação e testes verificados em 25/11/2026.
 
 - **[Decisões de Arquitetura (ADRs)](adr/README.md)**: Registros formais de decisões arquiteturais para o Frontend e Backend.
   - **[Frontend ADRs](adr/frontend/)**:

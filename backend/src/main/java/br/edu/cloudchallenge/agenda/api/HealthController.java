@@ -20,7 +20,7 @@ public class HealthController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @GetMapping("/health")
+    @GetMapping({"/health", "/api/health"})
     public ResponseEntity<HealthResponse> health() {
         try {
             jdbcTemplate.queryForObject("SELECT 1", Integer.class);

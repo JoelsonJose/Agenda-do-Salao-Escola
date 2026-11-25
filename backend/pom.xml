@@ -84,7 +84,14 @@
                 <includes>
                     <include>schema.sql</include>
                     <include>dados-iniciais.sql</include>
+                    <include>schema-azure-sql.sql</include>
+                    <include>dados-iniciais-azure-sql.sql</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>../frontend/dist</directory>
+                <targetPath>static</targetPath>
+                <filtering>false</filtering>
             </resource>
         </resources>
         <plugins>

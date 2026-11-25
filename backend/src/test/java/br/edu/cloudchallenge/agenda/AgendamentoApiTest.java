@@ -48,16 +48,27 @@ class AgendamentoApiTest {
 
     @Test
     void healthInformaConexaoEHorarioDeInicio() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk());
+
         mockMvc.perform(get("/health"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("UP"))
                 .andExpect(jsonPath("$.banco").value("conectado"))
-                .andExpect(jsonPath("$.iniciadoEm").exists());
+                .andExpect(jsonPath("$.iniciado_em").exists());
+
+        mockMvc.perform(get("/api/health"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.banco").value("conectado"));
     }
 
     @Test
     void listaCatalogoDeDadosFicticios() throws Exception {
         mockMvc.perform(get("/servicos").with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.nome == 'Corte')].duracaoMinutos").value(30));
+
+        mockMvc.perform(get("/api/servicos").with(httpBasic(USUARIO, SENHA)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[?(@.nome == 'Corte')].duracaoMinutos").value(30));
 

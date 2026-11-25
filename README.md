@@ -8,7 +8,7 @@ Aplicação do **Cloud Challenge — Desafio 03** para consultar a agenda diári
 |---|---|---|
 | Joelson e Tayana | Desenvolvimento | API, interface web e integração das funcionalidades. |
 | Homero e César | Dados | Modelo relacional, scripts SQL, catálogo fictício e validação da persistência. |
-| Lucas | Nuvem | Configuração de ambiente, plano e implantação Azure conforme o nível definido pelo professor. |
+| Lucas | Nuvem | Configuração de ambiente e implantação Azure do nível A escolhido pelo grupo. |
 | Nicolas e Morgana | QA e documentação | Casos de teste, evidências, revisão do README e preparação da apresentação. |
 
 ## O que o sistema faz
@@ -24,7 +24,7 @@ Aplicação do **Cloud Challenge — Desafio 03** para consultar a agenda diári
 ## Tecnologias e pastas
 
 - `frontend/`: React 19 e Vite 8 (Node.js 22.12 ou superior).
-- `backend/`: Java 21, Spring Boot 3.5, Spring Data JPA, Spring Security e validação.
+- `backend/`: Java 21, Spring Boot 3.5, Spring Data JPA, Spring Security e validação. O JAR recebe também o front-end compilado.
 - `banco/`: schema e catálogo inicial SQL. A execução local usa H2 persistente.
 - `.github/workflows/ci.yaml`: testes e build do backend e frontend, além de verificações de segurança.
 - `docs/`: decisões arquiteturais e instruções do projeto.
@@ -34,7 +34,7 @@ Aplicação do **Cloud Challenge — Desafio 03** para consultar a agenda diári
 flowchart LR
   B[Recepção no navegador] --> F[Frontend React]
   F -->|HTTP Basic e JSON| A[API Spring Boot]
-  A --> D[(Banco relacional)]
+  A --> D[(Azure SQL no nível A / H2 local)]
   A --> H[GET /health]
 ```
 
@@ -63,6 +63,8 @@ Pré-requisitos: Java 21, Maven 3.9 ou superior, Node.js 22.12 ou superior e npm
 
 3. Abra `http://localhost:5173`, informe as credenciais definidas no primeiro terminal e use clientes fictícios. O proxy do Vite encaminha `/api` para `http://localhost:8080`.
 
+Para gerar o JAR único usado no Azure, compile o front-end (`npm run build` em `frontend/`) antes do Maven. O Spring serve a página compilada e a API pelo mesmo endereço.
+
 Para apagar os dados de demonstração e começar de novo, pare a API e remova o arquivo `backend/data/agenda-salao.mv.db`.
 
 ## API
@@ -72,7 +74,9 @@ As rotas de negócio exigem HTTP Basic. O endpoint de saúde é público.
 | Método e rota | Uso |
 |---|---|
 | `GET /health` | Estado da aplicação e conexão do banco. |
+| `GET /api/health` | Mesmo teste de saúde sob o prefixo usado pela interface. |
 | `GET /servicos` | Catálogo de serviços e duração. |
+| `GET /api/servicos` | Mesmo catálogo, para o front-end hospedado junto da API. |
 | `GET /profissionais` | Catálogo de profissionais fictícios. |
 | `POST /agendamentos` | Criar atendimento; recebe `cliente`, `servicoId`, `profissionalId` e `dataHoraInicio` ISO 8601 com fuso. |
 | `GET /agendamentos?data=AAAA-MM-DD` | Agenda do dia; `profissionalId` é um filtro opcional. |
@@ -87,21 +91,34 @@ Por padrão, o backend abre um H2 em arquivo, com usuário `sa` e senha vazia, p
 
 Variáveis suportadas: `DATABASE_URL` (JDBC URL), `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `APP_USERNAME`, `APP_PASSWORD`, `CORS_ALLOWED_ORIGINS` e `PORT`. O arquivo `.env.example` mostra nomes e exemplos locais; o Spring não carrega `.env` automaticamente. Não publique senhas, connection strings reais, dados pessoais ou arquivos do banco.
 
-Os scripts em `banco/` usam recursos de H2 e sintaxe próxima de SQL padrão; antes de conectá-los a PostgreSQL ou Azure SQL, confira as diferenças anotadas no schema e execute os testes no banco escolhido. A configuração atual de execução e teste é H2.
+Os scripts locais em `banco/schema.sql` e `banco/dados-iniciais.sql` são para H2. O nível A usa versões próprias para Azure SQL em `banco/schema-azure-sql.sql` e `banco/dados-iniciais-azure-sql.sql`.
 
-## Nível de nuvem e limite atual
+## Azure — nível A escolhido pelo grupo
 
-O material da atividade define os níveis A, B e C, mas não registra qual foi atribuído a este grupo. Essa confirmação vem da distribuição do professor. Até o grupo confirmar o nível, o repositório não presume uma arquitetura Azure nem declara uma implantação como concluída:
+O grupo escolheu o nível A: aplicação no Azure App Service e Azure SQL gerenciado pelo grupo. O JAR está publicado e a URL `https://agenda-salao-escola-jj-hwdra6czavawczht.brazilsouth-01.azurewebsites.net` respondeu; `/api/health` informou `UP` e banco conectado. Os sete casos de aceite passaram na nuvem, e a reserva fictícia persistiu após reiniciar o App Service. Recursos observados usam planos/ofertas gratuitos com excedentes do banco desativados. Veja [docs/deploy-azure.md](docs/deploy-azure.md) para os detalhes e pendências de evidência.
 
-- **A:** aplicação no Azure App Service e banco criado/gerenciado pelo grupo.
-- **B:** banco compartilhado do professor; aplicação em App Service ou local, conforme orientação.
-- **C:** execução local; README deve trazer o plano de implantação Azure.
+### Modelo e decisão
 
-Não foram criados recursos Azure nem custos de nuvem. Depois da confirmação do nível, Lucas pode completar a configuração e o grupo registra URL e evidência reais.
+O modelo tem `servicos` (duração), `profissionais` e `agendamentos`. Cada agendamento referencia um serviço e um profissional, guarda início, fim e estado (`ATIVO` ou `CANCELADO`), e tem restrições de duração positiva, estado permitido e chaves estrangeiras. A aplicação calcula o fim e valida sobreposição, expediente e dia de atendimento.
+
+Para desenvolvimento, usamos H2 em arquivo; no nível A, Azure SQL fornece banco relacional gerenciado e persistência fora do computador local. Essa escolha facilita executar o projeto localmente e atende ao uso de banco gerenciado na nuvem, mas exige manter configuração e scripts específicos para SQL Server.
+
+### Estado dos requisitos
+
+| Requisito | Estado conhecido |
+|---|---|
+| Criar, consultar e cancelar agendamentos | Implementado e coberto por testes automatizados locais |
+| Impedir conflito, respeitar expediente e calcular duração | Implementado e coberto por testes automatizados locais |
+| Persistência local | H2 em arquivo; teste separado cobre persistência local |
+| Persistência no Azure e reinício do App Service | Confirmada: a reserva continuou após mudança de `iniciado_em` |
+| Consulta SQL direta e capturas com data/hora | Pendentes |
+| Vídeo da apresentação | Pendente de gravação pelo grupo |
+
+O roteiro de apresentação está em [`docs/pitch.md`](docs/pitch.md); o link da gravação deve ser inserido aqui depois que o grupo gravar e publicar o vídeo.
 
 ## Testes, tarefas e evidências
 
-Execute `mvn -f backend/pom.xml verify` para validar e empacotar o backend; em `frontend/`, execute `npm ci`, `npm test` e `npm run build`. O CI repete os testes e builds em cada push e pull request.
+Em `frontend/`, execute `npm ci`, `npm test` e `npm run build`; depois execute `mvn -f backend/pom.xml verify` na raiz para testar e empacotar o backend com o front-end. O CI faz a mesma sequência em cada push e pull request.
 
 O roteiro de QA está em [`docs/testes.md`](docs/testes.md). A lista das evidências que ainda precisam ser produzidas durante a execução está em [`evidencias/README.md`](evidencias/README.md). Não marque implantação, persistência após reinício ou apresentação como comprovadas sem capturar a demonstração correspondente.
 

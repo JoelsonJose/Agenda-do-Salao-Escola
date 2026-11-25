@@ -2,7 +2,7 @@ name: Cloud Challenge CI
 
 on:
   push:
-    branches: [ main, dev, "sprint-*", "codex/**" ]
+    branches: [ main, dev, "sprint-*", "codex/**", complete-agenda ]
   pull_request:
     branches: [ main, dev ]
   workflow_dispatch:
@@ -13,6 +13,7 @@ permissions:
 jobs:
   backend:
     name: Backend tests and package
+    needs: frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +23,10 @@ jobs:
           java-version: '21'
           cache: maven
           cache-dependency-path: backend/pom.xml
+      - uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
       - name: Run backend tests and package
         run: mvn -B -f backend/pom.xml verify
       - uses: actions/upload-artifact@v4
