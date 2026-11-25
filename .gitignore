@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+**/node_modules/
+**/dist/
+backend/target/
+data/
+.maven-cache/
+.maven-settings.xml
+.maven-debug.log
+.npm-cache/
+*-debug.log
+*-verify.log
+*.mv.db
+*.trace.db
+coverage/

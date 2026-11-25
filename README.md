@@ -1,149 +1,114 @@
 # Agenda do Salão-Escola
 
-Projeto do Cloud Challenge para organizar os agendamentos do Salão-Escola e evitar conflitos de horário entre clientes e profissionais.
+Aplicação do **Cloud Challenge — Desafio 03** para consultar a agenda diária de um salão-escola, criar e cancelar atendimentos e impedir dois agendamentos ativos no mesmo horário para a mesma profissional.
 
-## Problema e objetivo
+## Equipe
 
-Os agendamentos feitos manualmente podem colocar dois clientes com a mesma profissional no mesmo horário. O sistema permitirá criar, consultar e cancelar agendamentos, além de mostrar a agenda diária de cada profissional.
-
-## Equipe e responsabilidades
-
-| Integrante | Papel principal | Responsabilidades |
+| Integrantes | Frente | Entregas |
 |---|---|---|
-| Joelson | DEV | Estrutura da aplicação, integração das funcionalidades e revisão técnica. |
-| Tayana | DEV | Operações de agendamento, validações e regra de conflitos. |
-| Homero | DADOS | Modelo relacional, restrições e scripts SQL. |
-| César | DADOS | Dados iniciais fictícios, consultas e apoio à prova de persistência. |
-| Lucas | NUVEM | Variáveis de ambiente, configuração e implantação na Azure, conforme o nível atribuído. |
-| Nicolas | QA e documentação | Casos de teste, evidências e documentação de execução. |
-| Morgana | QA e documentação | README, revisão dos testes, evidências e apoio ao pitch. |
+| Joelson e Tayana | Desenvolvimento | API, interface web e integração das funcionalidades. |
+| Homero e César | Dados | Modelo relacional, scripts SQL, catálogo fictício e validação da persistência. |
+| Lucas | Nuvem | Configuração de ambiente, plano e implantação Azure conforme o nível definido pelo professor. |
+| Nicolas e Morgana | QA e documentação | Casos de teste, evidências, revisão do README e preparação da apresentação. |
 
-Esta distribuição é uma proposta inicial e pode ser ajustada pelo grupo. Todos devem conseguir explicar o fluxo da aplicação e do banco.
+## O que o sistema faz
 
-## Requisitos do desafio
+- Lista os serviços, a duração e os profissionais do catálogo fictício.
+- Cria agendamento e calcula o horário final pela duração do serviço.
+- Impede sobreposição de horários ativos para a mesma profissional (HTTP 409); horários encostados são permitidos.
+- Aceita atendimento de segunda a sábado, entre 08h e 20h, no fuso de Brasília, se o serviço couber inteiro no expediente.
+- Consulta a agenda diária geral ou filtrada por profissional.
+- Cancela sem apagar o histórico; o horário cancelado fica disponível novamente.
+- Protege operações com autenticação HTTP Basic e disponibiliza `GET /health` para verificar a conexão ao banco.
 
-- Carregar serviços, com suas durações, e profissionais fictícios por script SQL.
-- Criar agendamentos com cliente fictício, serviço, profissional e horário inicial.
-- Calcular o horário final com base na duração do serviço.
-- Recusar com erro HTTP 409 agendamentos ativos que se sobreponham para a mesma profissional.
-- Permitir agendamentos de segunda a sábado, entre 08:00 e 20:00, desde que o atendimento inteiro caiba nesse intervalo.
-- Cancelar agendamentos por mudança de status, liberando o horário.
-- Consultar a agenda de um dia por profissional.
-- Persistir os dados em banco e disponibilizar `GET /health` para verificar a conexão.
-- Validar entradas no servidor, retornar erros claros e usar consultas parametrizadas.
-- Manter a string de conexão em `DATABASE_URL`; nunca versionar `.env` ou credenciais.
+## Tecnologias e pastas
 
-## Modelo de dados relacional
-
-- `servicos`: identificador, nome e duração em minutos.
-- `profissionais`: identificador e nome fictício.
-- `agendamentos`: identificador, cliente fictício, referências ao serviço e profissional, início, fim e status.
-
-O modelo relacional foi estruturado para evitar dados órfãos, garantir integridade referencial e possibilitar o histórico de agendamentos.
+- `frontend/`: React 19 e Vite 8 (Node.js 22.12 ou superior).
+- `backend/`: Java 21, Spring Boot 3.5, Spring Data JPA, Spring Security e validação.
+- `banco/`: schema e catálogo inicial SQL. A execução local usa H2 persistente.
+- `.github/workflows/ci.yaml`: testes e build do backend e frontend, além de verificações de segurança.
+- `docs/`: decisões arquiteturais e instruções do projeto.
+- `evidencias/`: índice dos registros que o grupo ainda precisa capturar durante a demonstração.
 
 ```mermaid
-erDiagram
-    SERVICOS {
-        BIGINT id PK "IDENTITY"
-        VARCHAR nome "NOT NULL"
-        INT duracao_minutos "CHECK 15 a 240"
-    }
-
-    PROFISSIONAIS {
-        BIGINT id PK "IDENTITY"
-        VARCHAR nome "NOT NULL"
-    }
-
-    AGENDAMENTOS {
-        BIGINT id PK "IDENTITY"
-        VARCHAR cliente "NOT NULL"
-        BIGINT servico_id FK "NOT NULL, RESTRICT"
-        BIGINT profissional_id FK "NOT NULL, RESTRICT"
-        TIMESTAMP data_hora_inicio "NOT NULL"
-        TIMESTAMP data_hora_fim "CHECK fim > inicio"
-        VARCHAR status "CHECK ('ATIVO', 'CANCELADO')"
-    }
-
-    SERVICOS ||--o{ AGENDAMENTOS : "é realizado em"
-    PROFISSIONAIS ||--o{ AGENDAMENTOS : "atende"
+flowchart LR
+  B[Recepção no navegador] --> F[Frontend React]
+  F -->|HTTP Basic e JSON| A[API Spring Boot]
+  A --> D[(Banco relacional)]
+  A --> H[GET /health]
 ```
 
-### Restrições e Integridade
-- **Chaves Primárias e Estrangeiras**: Chaves primárias com auto-incremento padrão ANSI e chaves estrangeiras com `ON DELETE RESTRICT`, impedindo a remoção de serviços ou profissionais que possuam agendamentos vinculados (evita registros órfãos).
-- **Validação de Duração**: `CHECK (duracao_minutos >= 15 AND duracao_minutos <= 240)`.
-- **Validação de Intervalo Temporal**: `CHECK (data_hora_fim > data_hora_inicio)`.
-- **Restrição de Estados**: `CHECK (status IN ('ATIVO', 'CANCELADO'))` com valor padrão `'ATIVO'`.
+## Rodar localmente no Windows PowerShell
 
-### Decisão: Onde é validada a sobreposição de horários?
-- **Decisão**: A validação de sobreposição de horários é realizada na **Camada de Aplicação (`Service`)**, com controle transacional (`@Transactional`) e suporte a índices no banco de dados (detalhado em [ADR-006](docs/adr/backend/ADR-006-estrategia-banco-h2-e-validacao-sobreposicao.md)).
-- **Tratamento de Concorrência**: Agendamentos simultâneos são isolados pela transação do Spring Boot, retornando `HTTP 409 Conflict` com payload padronizado caso uma sobreposição seja detectada.
-- **Portabilidade**: Essa estratégia foi escolhida porque constraints de intervalo como `EXCLUDE USING gist` só existem no PostgreSQL, garantindo que a aplicação execute de forma idêntica no **H2 local**, no **Azure SQL** ou no **PostgreSQL**.
+Pré-requisitos: Java 21, Maven 3.9 ou superior, Node.js 22.12 ou superior e npm.
 
-### Histórico de Cancelamentos
-- Ao cancelar um atendimento, o registro é atualizado para `status = 'CANCELADO'`.
-- A verificação de sobreposição filtra estritamente `WHERE status = 'ATIVO'`. Dessa forma, o horário cancelado é liberado imediatamente para nova marcação, mantendo o histórico de agendamentos preservado no banco para auditoria.
+1. No terminal, vá para `backend` e inicie a API:
 
-## Arquitetura e tecnologias
+   ```powershell
+   cd backend
+   $env:APP_USERNAME = 'recepcionista'
+   $env:APP_PASSWORD = 'troque-esta-senha-local'
+   mvn spring-boot:run
+   ```
 
-Fluxo previsto: cliente ou ferramenta HTTP → aplicação/API → banco relacional.
+   Na primeira execução, o Spring cria `backend/data/agenda-salao.mv.db` e carrega `banco/schema.sql` e `banco/dados-iniciais.sql`.
 
-- **Frontend**: React + React DOM + Vite (MVVM, Atomic Design, Package by Feature, Clean Code e Security by Design) — veja [docs/adr/](docs/adr/README.md).
-- **Backend**: Java com Spring Boot, Spring Security e Spring Data JPA (Hibernate como ORM).
-- **Banco de dados**: H2 Database persistente com console visual web (`/h2-console`) e scripts ANSI em `banco/schema.sql` e `banco/dados-iniciais.sql` (compatíveis com PostgreSQL e Azure SQL).
-- Hospedagem: Azure App Service, conforme a atividade.
-- Nível de implantação (A, B ou C): **Pendente de confirmação oficial com o professor** — opções e escopo registrados em [docs/requisitos/](docs/requisitos/README.md).
+2. Em outro terminal, instale e inicie a interface:
 
-## Sprints
+   ```powershell
+   cd frontend
+   npm ci
+   npm run dev
+   ```
 
-### Sprint 0 — Planejamento
+3. Abra `http://localhost:5173`, informe as credenciais definidas no primeiro terminal e use clientes fictícios. O proxy do Vite encaminha `/api` para `http://localhost:8080`.
 
-Confirmar linguagem, banco e nível de implantação; registrar a arquitetura, as rotas, o modelo de dados, os papéis e os critérios de aceitação.
+Para apagar os dados de demonstração e começar de novo, pare a API e remova o arquivo `backend/data/agenda-salao.mv.db`.
 
-### Sprint 1 — Persistência
+## API
 
-Criar schema e dados iniciais; configurar `DATABASE_URL`; implementar e verificar a gravação, consulta e cancelamento persistidos; preparar a prova de persistência após reinício.
+As rotas de negócio exigem HTTP Basic. O endpoint de saúde é público.
 
-### Sprint 2 — Regras, implantação e testes
-
-Implementar e demonstrar a regra de conflitos, horário de funcionamento e agenda diária; implantar no nível atribuído; executar os testes; completar evidências, README e pitch.
-
-## Critérios de aceitação principais
-
-| Cenário | Resultado esperado |
+| Método e rota | Uso |
 |---|---|
-| Ana tem atendimento das 14:00 às 14:30; novo horário para Ana às 14:15 | Recusar com 409 por sobreposição. |
-| Ana tem atendimento até 14:30; novo horário para Ana às 14:30 | Aceitar, pois encostar no horário final não é conflito. |
-| Bruno recebe agendamento às 14:15 enquanto Ana está ocupada | Aceitar, pois é outra pessoa profissional. |
-| Cancelar o atendimento de Ana às 14:00 e agendar Ana nesse horário | Aceitar; o cancelamento libera o horário. |
-| Serviço de 45 minutos às 19:45 ou tentativa de agendamento no domingo | Recusar com 400. |
+| `GET /health` | Estado da aplicação e conexão do banco. |
+| `GET /servicos` | Catálogo de serviços e duração. |
+| `GET /profissionais` | Catálogo de profissionais fictícios. |
+| `POST /agendamentos` | Criar atendimento; recebe `cliente`, `servicoId`, `profissionalId` e `dataHoraInicio` ISO 8601 com fuso. |
+| `GET /agendamentos?data=AAAA-MM-DD` | Agenda do dia; `profissionalId` é um filtro opcional. |
+| `PATCH /agendamentos/{id}/cancelamento` | Cancela mantendo o registro no histórico. |
+| `GET /swagger-ui.html` | Documentação interativa da API. |
 
-## Execução e testes
+Respostas principais: `201` ao criar, `200` ao consultar/cancelar, `400` para entrada/regra inválida, `401` sem credenciais válidas, `404` para IDs inexistentes e `409` para choque de horário ou cancelamento duplicado.
 
-Instruções de instalação, configuração de `DATABASE_URL`, execução dos scripts SQL e inicialização da aplicação serão adicionadas após a definição da linguagem, do framework e do banco.
+## Banco e variáveis
 
-Os testes devem cobrir os critérios de aceitação acima e incluir casos inválidos. Os resultados e as evidências da atividade serão registrados em `evidencias/`.
+Por padrão, o backend abre um H2 em arquivo, com usuário `sa` e senha vazia, para facilitar a demonstração local. O usuário HTTP é `recepcionista`; defina `APP_PASSWORD` antes de iniciar.
 
-## Estrutura planejada
+Variáveis suportadas: `DATABASE_URL` (JDBC URL), `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `APP_USERNAME`, `APP_PASSWORD`, `CORS_ALLOWED_ORIGINS` e `PORT`. O arquivo `.env.example` mostra nomes e exemplos locais; o Spring não carrega `.env` automaticamente. Não publique senhas, connection strings reais, dados pessoais ou arquivos do banco.
 
-```text
-README.md
-.gitignore
-.env.example
-banco/
-  schema.sql
-  dados-iniciais.sql
-docs/
-  README.md
-  requisitos/
-    README.md
-    requisitos-funcionais.md
-    requisitos-nao-funcionais.md
-    modelos-e-criterios.md
-  adr/
-    frontend/
-    backend/
-  planejamento.md
-  testes.md
-evidencias/
-src/
-```
+Os scripts em `banco/` usam recursos de H2 e sintaxe próxima de SQL padrão; antes de conectá-los a PostgreSQL ou Azure SQL, confira as diferenças anotadas no schema e execute os testes no banco escolhido. A configuração atual de execução e teste é H2.
+
+## Nível de nuvem e limite atual
+
+O material da atividade define os níveis A, B e C, mas não registra qual foi atribuído a este grupo. Essa confirmação vem da distribuição do professor. Até o grupo confirmar o nível, o repositório não presume uma arquitetura Azure nem declara uma implantação como concluída:
+
+- **A:** aplicação no Azure App Service e banco criado/gerenciado pelo grupo.
+- **B:** banco compartilhado do professor; aplicação em App Service ou local, conforme orientação.
+- **C:** execução local; README deve trazer o plano de implantação Azure.
+
+Não foram criados recursos Azure nem custos de nuvem. Depois da confirmação do nível, Lucas pode completar a configuração e o grupo registra URL e evidência reais.
+
+## Testes, tarefas e evidências
+
+Execute `mvn -f backend/pom.xml verify` para validar e empacotar o backend; em `frontend/`, execute `npm ci`, `npm test` e `npm run build`. O CI repete os testes e builds em cada push e pull request.
+
+O roteiro de QA está em [`docs/testes.md`](docs/testes.md). A lista das evidências que ainda precisam ser produzidas durante a execução está em [`evidencias/README.md`](evidencias/README.md). Não marque implantação, persistência após reinício ou apresentação como comprovadas sem capturar a demonstração correspondente.
+
+## Sprints propostas
+
+1. **Base e persistência:** confirmar nível/arquitetura, modelo e seed; executar API; demonstrar cadastro e consulta persistidos.
+2. **Regras e interface:** agenda por data/profissional, criação, conflito, cancelamento, validações e interface integrada.
+3. **QA e entrega:** testes e build verdes; implantação no nível atribuído; teste de persistência após reinício; evidências, revisão do README e pitch gravado.
+
+As sprints organizam as Issues; cada pessoa deve mover os próprios itens no GitHub Project e referenciar a Issue no pull request/commit relacionado.
