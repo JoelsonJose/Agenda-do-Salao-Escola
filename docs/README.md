@@ -27,6 +27,8 @@ Bem-vindo à documentação técnica e arquitetural do projeto **Agenda do Salã
     - [ADR-003: Spring Security e Security by Design](adr/backend/ADR-003-spring-security-security-by-design.md)
     - [ADR-004: Diretrizes de Clean Code no Backend](adr/backend/ADR-004-clean-code-backend.md)
     - [ADR-005: Documentação de Contratos com OpenAPI 3 e Swagger UI](adr/backend/ADR-005-documentacao-openapi-swagger.md)
+    - [ADR-006: Estratégia de Banco de Dados (H2) e Validação de Sobreposição](adr/backend/ADR-006-estrategia-banco-h2-e-validacao-sobreposicao.md)
+    - [ADR-007: Adoção do Spring Data JPA e Inspeção Visual com H2 Console](adr/backend/ADR-007-orm-spring-data-jpa-e-h2-console.md)
 
 ---
 

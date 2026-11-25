@@ -27,7 +27,9 @@ docs/
         ├── ADR-002-arquitetura-em-camadas.md
         ├── ADR-003-spring-security-security-by-design.md
         ├── ADR-004-clean-code-backend.md
-        └── ADR-005-documentacao-openapi-swagger.md
+        ├── ADR-005-documentacao-openapi-swagger.md
+        ├── ADR-006-estrategia-banco-h2-e-validacao-sobreposicao.md
+        └── ADR-007-orm-spring-data-jpa-e-h2-console.md
 ```
 
 ---
@@ -54,4 +56,5 @@ docs/
 | [ADR-003](backend/ADR-003-spring-security-security-by-design.md) | Segurança com Spring Security e Security by Design | Aceito | 04/11/2026 |
 | [ADR-004](backend/ADR-004-clean-code-backend.md) | Diretrizes e Padrões de Clean Code no Backend | Aceito | 04/11/2026 |
 | [ADR-005](backend/ADR-005-documentacao-openapi-swagger.md) | Documentação de Contratos de API com OpenAPI 3 e Swagger UI | Aceito | 04/11/2026 |
-
+| [ADR-006](backend/ADR-006-estrategia-banco-h2-e-validacao-sobreposicao.md) | Estratégia de Banco de Dados (H2) e Local de Validação de Sobreposição | Aceito | 04/11/2026 |
+| [ADR-007](backend/ADR-007-orm-spring-data-jpa-e-h2-console.md) | Adoção do Spring Data JPA como ORM e H2 Console para Inspeção Visual | Aceito | 04/11/2026 |
