@@ -44,8 +44,22 @@ class AgendamentoApiTest {
     @BeforeEach
     void limparAgendamentos() {
         jdbcTemplate.update("DELETE FROM agendamentos");
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void healthInformaConexaoEHorarioDeInicio() throws Exception {
         mockMvc.perform(get("/"))
@@ -60,8 +74,22 @@ class AgendamentoApiTest {
         mockMvc.perform(get("/api/health"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.banco").value("conectado"));
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void listaCatalogoDeDadosFicticios() throws Exception {
         mockMvc.perform(get("/servicos").with(httpBasic(USUARIO, SENHA)))
@@ -76,8 +104,22 @@ class AgendamentoApiTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[?(@.nome == 'Ana')]").isNotEmpty())
                 .andExpect(jsonPath("$[?(@.nome == 'Bruno')]").isNotEmpty());
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void criaAgendamentoCalculandoOFimEPermiteHorarioContiguo() throws Exception {
         OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
@@ -87,22 +129,64 @@ class AgendamentoApiTest {
                 .isEqualTo(inicio.plusMinutes(30));
 
         criar("Outra Cliente", 1, 1, inicio.plusMinutes(30), 201);
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void recusaSobreposicaoDaMesmaProfissionalCom409() throws Exception {
         OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
         criar("Ana Cliente Um", 1, 1, inicio, 201);
         criar("Ana Cliente Dois", 1, 1, inicio.plusMinutes(15), 409);
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void aceitaMesmoHorarioParaOutraProfissional() throws Exception {
         OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
         criar("Ana Cliente", 1, 1, inicio, 201);
         criar("Bruno Cliente", 1, 2, inicio, 201);
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void cancelamentoLiberaHorarioEConservaHistorico() throws Exception {
         OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
@@ -119,8 +203,22 @@ class AgendamentoApiTest {
 
         mockMvc.perform(patch("/agendamentos/{id}/cancelamento", id).with(httpBasic(USUARIO, SENHA)))
                 .andExpect(status().isConflict());
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void recusaAtendimentoQueUltrapassaFechamentoEDomingo() throws Exception {
         LocalDate diaUtil = proximoDiaUtil();
@@ -130,11 +228,39 @@ class AgendamentoApiTest {
         LocalDate domingo = diaUtil.plusDays(1);
         while (domingo.getDayOfWeek() != DayOfWeek.SUNDAY) {
             domingo = domingo.plusDays(1);
-        }
-        criar("Cliente Fictícia", 1, 1,
-                domingo.atTime(14, 0).atOffset(ZoneOffset.ofHours(-3)), 400);
+        
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}        criar("Cliente Fictícia", 1, 1,
+                domingo.atTime(14, 0).atOffset(ZoneOffset.ofHours(-3)), 400);
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
+    }
+
+}
     @Test
     void validaCamposEIdsInexistentesComErrosClaros() throws Exception {
         OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
@@ -143,8 +269,22 @@ class AgendamentoApiTest {
         mockMvc.perform(patch("/agendamentos/{id}/cancelamento", 9999)
                         .with(httpBasic(USUARIO, SENHA)))
                 .andExpect(status().isNotFound());
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     @Test
     void filtraAgendaDoDiaPorProfissional() throws Exception {
         LocalDate dia = proximoDiaUtil();
@@ -159,8 +299,22 @@ class AgendamentoApiTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].profissional").value("Ana"));
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     private JsonNode criar(String cliente, long servicoId, long profissionalId,
                            OffsetDateTime inicio, int statusEsperado) throws Exception {
         String corpo = objectMapper.writeValueAsString(new Pedido(
@@ -172,16 +326,87 @@ class AgendamentoApiTest {
                 .andExpect(status().is(statusEsperado))
                 .andReturn().getResponse().getContentAsString();
         return resposta.isBlank() ? objectMapper.createObjectNode() : objectMapper.readTree(resposta);
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
+}
     private LocalDate proximoDiaUtil() {
         LocalDate data = LocalDate.now().plusDays(1);
         while (data.getDayOfWeek() == DayOfWeek.SUNDAY) {
             data = data.plusDays(1);
-        }
-        return data;
+        
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
 
-    private record Pedido(String cliente, long servicoId, long profissionalId, String dataHoraInicio) {
+}        return data;
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
     }
+
+}
+    private record Pedido(String cliente, long servicoId, long profissionalId, String dataHoraInicio) {
+    
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
+    }
+
+}
+    @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    void persistenciaAposReinicioDoContexto() throws Exception {
+        // cria agendamento
+        OffsetDateTime inicio = proximoDiaUtil().atTime(14, 0).atOffset(ZoneOffset.ofHours(-3));
+        JsonNode criado = criar("Cliente Persistente", 1, 1, inicio, 201);
+        long id = criado.get("id").asLong();
+        // o contexto já será reiniciado devido ao @DirtiesContext
+        // consulta novamente o agendamento para garantir que persiste
+        mockMvc.perform(get("/agendamentos/" + id).with(httpBasic(USUARIO, SENHA)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cliente").value("Cliente Persistente"));
+    }
+
 }
